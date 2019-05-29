@@ -2,26 +2,28 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 
-# points = [
-#     (1, 0.6),
-#     (2, 1),
-#     (2.5, 2),
-#     (2, 3),
-#     (0, 3),
-#     (-2, 2.5),
-#     (-2.5, 1.5),
-#     (-3, -1),
-#     (-2, -2),
-#     (0, -2.5)
-# ]
-#
 points = [
-    (1, 1),
+    (1, 0.6),
+    (2, 1),
+    (2.5, 2),
     (2, 3),
-    (3, 2),
-    (4, 4),
-    (5, 1)
+    (0, 3),
+    (-2, 2.5),
+    (-2.5, 1.5),
+    (-3, -1),
+    (-2, -2),
+    (0, -2.5)
 ]
+
+
+
+# points = [
+#     (1, 1),
+#     (2, 3),
+#     (3, 2),
+#     (4, 4),
+#     (5, 1)
+# ]
 
 def transform_polar(points):
     polar_points = []
@@ -118,11 +120,15 @@ def calculate_points(z):
     for i in range(n-1):
         xi, yi = points[i]
         xj, yj = points[i + 1]
-        fun = lambda x: ((z[i][0]/(6.0*h(i))) * math.pow((xj - x), 3.0) + z[i+1][0]/(6.0*h(i)) * math.pow((x - xi), 3.0)
-        + (yj/h(i) - (z[i+1][0]*h(i))/6.0))*(x - xi) + (yi/h(i) - (z[i][0]*h(i))/6.0) * (xj - x)
+        val1 = z[i][0] / (6.0 * h(i))
+        val2 = z[i + 1][0] / (6.0 * h(i))
+        val3 = (yj/h(i) - (z[i+1][0]*h(i))/6.0)
+        val4 = (yi/h(i) - (z[i][0]*h(i))/6.0)
+        fun = lambda x: val1 * (xj - x)**3 + val2 * (x - xi)**3 + val3*(x - xi) + val4 * (xj - x)
         #beg, end = min(xi, xj), max(xi, xj)
         for k in np.arange(xi, xj+2*step, step):
             ret_points.append((k, fun(k)))
+
     return ret_points
 
 
@@ -130,8 +136,8 @@ def calculate_points(z):
 
 
 def main():
-    # global points
-    # points = transform_polar(points)
+    global points
+    points = transform_polar(points)
     xpoints = [x[0] for x in points]
     ypoints = [y[1] for y in points]
 
@@ -148,8 +154,8 @@ def main():
     xspline = [x for x, _ in spline_points]
     yspline = [y for _, y in spline_points]
 
-    plt.plot(xspline, yspline, 'bo')
-    plt.plot(xpoints, ypoints, 'ro')
+    plt.polar(xspline, yspline, 'bo')
+    plt.polar(xpoints, ypoints, 'ro')
     plt.show()
 
 

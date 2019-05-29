@@ -2,26 +2,26 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 
-points = [
-    (1, 0.6),
-    (2, 1),
-    (2.5, 2),
-    (2, 3),
-    (0, 3),
-    (-2, 2.5),
-    (-2.5, 1.5),
-    (-3, -1),
-    (-2, -2),
-    (0, -2.5)
-]
-#
 # points = [
-#     (1, 1),
+#     (1, 0.6),
+#     (2, 1),
+#     (2.5, 2),
 #     (2, 3),
-#     (3, 2),
-#     (4, 4),
-#     (5, 1)
+#     (0, 3),
+#     (-2, 2.5),
+#     (-2.5, 1.5),
+#     (-3, -1),
+#     (-2, -2),
+#     (0, -2.5)
 # ]
+#
+points = [
+    (1, 1),
+    (2, 3),
+    (3, 2),
+    (4, 4),
+    (5, 1)
+]
 
 def transform_polar(points):
     polar_points = []
@@ -50,7 +50,7 @@ def a(i):
 
 def spline_first():
     tmp_points = []
-    step = 0.2
+    step = 0.1
     n = len(points)
     for i in range(n-1):
         xj, _ = points[i+1]
@@ -118,8 +118,8 @@ def calculate_points(z):
     for i in range(n-1):
         xi, yi = points[i]
         xj, yj = points[i + 1]
-        fun = lambda x: ((z[i]/(6.0*h(i))) * math.pow((xj - x), 3.0) + z[i+1]/(6.0*h(i)) * math.pow((x - xi), 3.0)
-        + (yj/h(i) - (z[i+1]*h(i))/6.0))*(x - xi) + (yi/h(i) - (z[i]*h(i))/6.0) * (xj - x)
+        fun = lambda x: ((z[i][0]/(6.0*h(i))) * math.pow((xj - x), 3.0) + z[i+1][0]/(6.0*h(i)) * math.pow((x - xi), 3.0)
+        + (yj/h(i) - (z[i+1][0]*h(i))/6.0))*(x - xi) + (yi/h(i) - (z[i][0]*h(i))/6.0) * (xj - x)
         #beg, end = min(xi, xj), max(xi, xj)
         for k in np.arange(xi, xj+2*step, step):
             ret_points.append((k, fun(k)))
@@ -136,21 +136,21 @@ def main():
     ypoints = [y[1] for y in points]
 
 
-    spline_points = spline_first()
-    xspline = [x for x, _ in spline_points]
-    yspline = [y for _, y in spline_points]
-
-    plt.plot(xspline, yspline, 'bo')
-    plt.plot(xpoints, ypoints, 'ro')
-    plt.show()
-    # Y = spline_third()
-    # spline_points = calculate_points(Y)
+    # spline_points = spline_first()
     # xspline = [x for x, _ in spline_points]
     # yspline = [y for _, y in spline_points]
     #
     # plt.plot(xspline, yspline, 'bo')
     # plt.plot(xpoints, ypoints, 'ro')
     # plt.show()
+    Y = spline_third()
+    spline_points = calculate_points(Y)
+    xspline = [x for x, _ in spline_points]
+    yspline = [y for _, y in spline_points]
+
+    plt.plot(xspline, yspline, 'bo')
+    plt.plot(xpoints, ypoints, 'ro')
+    plt.show()
 
 
 if __name__ == "__main__":

@@ -132,9 +132,21 @@ def calculate_points(z):
     return ret_points
 
 
+def f(x):
+    return math.e ** (-x / 2) * math.sin(4 * x)
+
+
+def generate_points():
+    ret_points = []
+    step = 1
+    for k in np.arange(-1, 7 + 2 * step, step):
+        ret_points.append((k, f(k)))
+    return ret_points
+
+
 def main():
-    # global points
-    # points = transform_polar(points)
+    global points
+    points = generate_points()
     xpoints = [x[0] for x in points]
     ypoints = [y[1] for y in points]
 
